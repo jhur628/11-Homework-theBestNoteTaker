@@ -3,6 +3,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const uuid = require('./helpers/uuid')
+const db = require('./db/db.json')
 
 const PORT = process.env.PORT || 3001;
 
@@ -22,23 +23,14 @@ app.get('/notes', (req, res) =>
 );
 
 app.get('/api/notes', (req, res) => {
-    fs.readFile("db/db.json", (data) => {
-        res.json(JSON.parse(data));
-    })
+    res.json(db);
 })
 
-app.post('/api/notes', (req, res) => {
-    fs.readFile('db/db.json', (data) =>{
-        let jsonDB = JSON.parse(data);
-        let newNote = req.body;
-        newNote.id = jsonDB.length;
-        jsonDB.push(newNote);
-        jsonDB = JSON.stringify(jsonDB);
-        fs.writeFile('db/db.json', jsonDB, (jsonDB) => {
-            res.json(jsonDB);
-        })
-    })
-});
+// app.post('/api/notes', (req, res) => {
+//     fs.readFile('db/db.json', (data) =>{
+      
+//     })
+// });
 
 // logs a link to the app
 app.listen(PORT, () =>
