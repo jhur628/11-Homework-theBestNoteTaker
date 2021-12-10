@@ -34,7 +34,14 @@ app.post('/api/notes', (req, res) => {
         let newNote = req.body;
         newNote.id = uuid();
         dbNotes.push(newNote);
+        let dbStringified = JSON.stringify(dbNotes);
         console.log(dbNotes);
+        fs.writeFile('db/db.json', dbStringified, (err) => {
+            if (err) console.log(`ERROR!`);
+            else {
+                console.log(`SUCCESS! WROTE db.json!`)
+            };
+        })
     })
 });
 
