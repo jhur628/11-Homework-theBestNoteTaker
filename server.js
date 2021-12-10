@@ -1,7 +1,5 @@
 // Require modules
-const { application } = require('express');
-const express = require('express');
-const res = require('express/lib/response');
+const app = require('express');
 const fs = require('fs');
 const path = require('path');
 
@@ -18,7 +16,7 @@ app.get('/', (req, res) =>
     res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
-
+app.get('/')
 
 // logs a link to the app
 app.listen(PORT, () =>
