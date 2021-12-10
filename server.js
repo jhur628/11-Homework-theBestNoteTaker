@@ -18,24 +18,24 @@ app.get('/', (req, res) =>
     res.sendFile(path.join(__dirname, '/public/index.html'))
 );
 
+// Have "/notes" be notes.html
 app.get('/notes', (req, res) =>
     res.sendFile(path.join(__dirname, '/public/notes.html'))
 );
 
+// GET db.json to append notes from database
 app.get('/api/notes', (req, res) => {
     res.json(db);
 })
 
 app.post('/api/notes', (req, res) => {
-    let noteDB = JSON.parse(db);
-    let newNote = req.body;
-    newNote.id = uuid();
-    noteDB.push(newNote);
-    noteDB = JSON.stringify(noteDB);
-    res.json(noteDB);
-    fs.writeFile('db/db.json', noteDB, (err) => 
-        err ? console.log(err) : console.log(`POST successful`)
-    )
+    fs.readFile('db/db.json', 'utf-8', (err, data) => {
+        let dbNotes = JSON.parse(data);
+        let newNote = req.body;
+        newNote.id = uuid();
+        dbNotes.push(newNote);
+        console.log(dbNotes);
+    })
 });
 
 // logs a link to the app
