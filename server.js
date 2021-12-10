@@ -28,6 +28,7 @@ app.get('/api/notes', (req, res) => {
     res.json(db);
 })
 
+// POST will send response of added note and write over db.json
 app.post('/api/notes', (req, res) => {
     fs.readFile('db/db.json', 'utf-8', (err, data) => {
         let dbNotes = JSON.parse(data);
@@ -39,11 +40,14 @@ app.post('/api/notes', (req, res) => {
         fs.writeFile('db/db.json', dbStringified, (err) => {
             if (err) console.log(`ERROR!`);
             else {
-                console.log(`SUCCESS! WROTE db.json!`)
+                console.log(`SUCCESS! WROTE db.json!`);
+                res.json(dbStringified);
             };
         })
     })
 });
+
+
 
 // logs a link to the app
 app.listen(PORT, () =>
