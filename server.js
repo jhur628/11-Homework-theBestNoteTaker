@@ -26,11 +26,17 @@ app.get('/api/notes', (req, res) => {
     res.json(db);
 })
 
-// app.post('/api/notes', (req, res) => {
-//     fs.readFile('db/db.json', (data) =>{
-      
-//     })
-// });
+app.post('/api/notes', (req, res) => {
+    let noteDB = JSON.parse(db);
+    let newNote = req.body;
+    newNote.id = uuid();
+    noteDB.push(newNote);
+    noteDB = JSON.stringify(noteDB);
+    res.json(noteDB);
+    fs.writeFile('db/db.json', noteDB, (err) => 
+        err ? console.log(err) : console.log(`POST successful`)
+    )
+});
 
 // logs a link to the app
 app.listen(PORT, () =>
