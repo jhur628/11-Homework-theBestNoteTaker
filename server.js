@@ -30,37 +30,34 @@ app.get('/api/notes', (req, res) => {
 
 // POST will send response of added note and write over db.json
 app.post('/api/notes', (req, res) => {
-    fs.readFile('db/db.json', 'utf-8', (err, data) => {
-        let dbNotes = JSON.parse(data);
-        let newNote = req.body;
-        newNote.id = uuid();
-        dbNotes.push(newNote);
-        let dbStringified = JSON.stringify(dbNotes);
-        console.log(dbNotes);
-        fs.writeFile('db/db.json', dbStringified, (err) => {
-            if (err) console.log(`ERROR!`);
-            else {
-                console.log(`SUCCESS! WROTE db.json!`);
-                res.json(dbStringified);
-            };
-        })
+    console.log(db);
+    let dbNotes = JSON.parse(db);
+    let newNote = req.body;
+    newNote.id = uuid();
+    dbNotes.push(newNote);
+    let dbStringified = JSON.stringify(dbNotes);
+    console.log(dbNotes);
+    fs.writeFile('db/db.json', dbStringified, (err) => {
+        if (err) console.log(`ERROR!`);
+        else {
+            console.log(`SUCCESS! WROTE db.json!`);
+            res.json(dbStringified);
+        };
     })
 });
 
 // DELETE will delete respective note by id and write unto db.json
 app.delete(`/api/notes/:id`, (req, res) => {
     const id = req.params.id;
-    fs.readFile('db/db.json', 'utf-8', (err, data) => {
-        let oldNotes = JSON.parse(data);
-        let newNotes = oldNotes.filter(keptObj => {
-            return keptObj.id !== id;
-        })
-        newNotes = JSON.stringify(newNotes);
-        console.log(newNotes);
-        fs.writeFile('db/db.json', newNotes, (err) => {
-            console.log(`SUCCESS! WROTE db.json without ${id}!`);
-            res.json(newNotes);
-        })
+    let oldNotes = JSON.parse(db);
+    let newNotes = oldNotes.filter(keptObj => {
+        return keptObj.id !== id;
+    })
+    newNotes = JSON.stringify(newNotes);
+    console.log(newNotes);
+    fs.writeFile('db/db.json', newNotes, (err) => {
+        console.log(`SUCCESS! WROTE db.json without ${id}!`);
+        res.json(newNotes);
     })
 })
 
