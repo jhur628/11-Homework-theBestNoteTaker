@@ -47,7 +47,22 @@ app.post('/api/notes', (req, res) => {
     })
 });
 
-
+// DELETE will delete respective note by id and write unto db.json
+app.delete(`/api/notes/:id`, (req, res) => {
+    const id = req.params.id;
+    fs.readFile('db/db.json', 'utf-8', (err, data) => {
+        let oldNotes = JSON.parse(data);
+        let newNotes = oldNotes.filter(keptObj => {
+            return keptObj.id !== id;
+        })
+        newNotes = JSON.stringify(newNotes);
+        console.log(newNotes);
+        fs.writeFile('db/db.json', newNotes, (err) => {
+            console.log(`SUCCESS! WROTE db.json without ${id}!`);
+            res.json(newNotes);
+        })
+    })
+})
 
 // logs a link to the app
 app.listen(PORT, () =>
