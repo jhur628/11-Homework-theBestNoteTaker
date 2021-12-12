@@ -3,7 +3,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const uuid = require('./helpers/uuid')
-const db = require('./db/db.json')
+let db = require('./db/db.json')
 
 const PORT = process.env.PORT || 3001;
 
@@ -30,35 +30,26 @@ app.get('/api/notes', (req, res) => {
 
 // POST will send response of added note and write over db.json
 app.post('/api/notes', (req, res) => {
-    console.log(db);
-    let dbNotes = JSON.parse(db);
-    let newNote = req.body;
-    newNote.id = uuid();
-    dbNotes.push(newNote);
-    let dbStringified = JSON.stringify(dbNotes);
-    console.log(dbNotes);
-    fs.writeFile('db/db.json', dbStringified, (err) => {
-        if (err) console.log(`ERROR!`);
-        else {
-            console.log(`SUCCESS! WROTE db.json!`);
-            res.json(dbStringified);
-        };
-    })
+    const {title, text} = req.body
+    const newNote = {
+        title,
+        text,
+        id: uuid()
+    }
+    db.push(newNote)
+    res.json(db)
 });
 
 // DELETE will delete respective note by id and write unto db.json
 app.delete(`/api/notes/:id`, (req, res) => {
-    const id = req.params.id;
-    let oldNotes = JSON.parse(db);
-    let newNotes = oldNotes.filter(keptObj => {
-        return keptObj.id !== id;
-    })
-    newNotes = JSON.stringify(newNotes);
-    console.log(newNotes);
-    fs.writeFile('db/db.json', newNotes, (err) => {
-        console.log(`SUCCESS! WROTE db.json without ${id}!`);
-        res.json(newNotes);
-    })
+    if (db.length === 0 || db.length === 1) {
+        db = []
+        res.json(db)
+    } else {
+        let newDB = db.filter((item) => item.id !== req.params.id)
+        db = newDB
+        res.json(db)
+    }
 })
 
 // logs a link to the app
