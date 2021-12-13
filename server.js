@@ -38,6 +38,10 @@ app.post('/api/notes', (req, res) => {
     }
     db.push(newNote)
     res.json(db)
+    fs.writeFile('db/db.json', JSON.stringify(db), (err) => {
+        if (err) console.log('ERROR!')
+        else {console.log('SUCCESS! WROTE db.json with new array')}
+    })
 });
 
 // DELETE will delete respective note by id and write unto db.json
@@ -45,10 +49,18 @@ app.delete(`/api/notes/:id`, (req, res) => {
     if (db.length === 0 || db.length === 1) {
         db = []
         res.json(db)
+        fs.writeFile('db/db.json', JSON.stringify(db), (err) => {
+            if (err) console.log('ERROR!')
+            else {console.log('SUCCESS! WROTE db.json with new array')}
+        })
     } else {
         let newDB = db.filter((item) => item.id !== req.params.id)
         db = newDB
         res.json(db)
+        fs.writeFile('db/db.json', JSON.stringify(db), (err) => {
+            if (err) console.log('ERROR!')
+            else {console.log('SUCCESS! WROTE db.json with new array')}
+        })
     }
 })
 
