@@ -46,7 +46,7 @@ app.post('/api/notes', (req, res) => {
 
 // DELETE will delete respective note by id and write unto db.json
 app.delete(`/api/notes/:id`, (req, res) => {
-    if (db.length === 0 || db.length === 1) {
+    if (db.length <= 1) {
         db = []
         res.json(db)
         fs.writeFile('db/db.json', JSON.stringify(db, null, 3), (err) => {
